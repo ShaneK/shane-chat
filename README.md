@@ -3,6 +3,7 @@
 # Shane Chat
 
 Welcome to Shane Chat!
+
 ![Shane Chat](https://user-images.githubusercontent.com/561207/154571246-58fe7d0d-cf06-42ad-b067-6bbff603b8ce.png)
 
 This is a simple chat app that supports multiple users with very basic "authentication" and "authorization".  
