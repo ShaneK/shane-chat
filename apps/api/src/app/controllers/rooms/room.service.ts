@@ -7,6 +7,9 @@ export class RoomService {
   constructor(private _dataService: DataService) {}
 
   public async listRooms(): Promise<Room[]> {
+    // Pull in the list of rooms with the most recent message creation date
+    // Whenever we create the room with `new Room(...)`, we look to see if there's a
+    // `last_message` date. If so, we use that for `last_activity`, otherwise we use `created_on`
     const { rows = [] } = await this._dataService.pool.query<
       Room & { last_message?: Date }
     >(
