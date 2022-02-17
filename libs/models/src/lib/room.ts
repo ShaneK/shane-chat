@@ -1,4 +1,4 @@
-import { formatRelative } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { Message } from './message';
 
 export class Room {
@@ -25,6 +25,6 @@ export class Room {
   }
 
   public lastActivityMessage(): string {
-    return formatRelative(this.last_activity, new Date());
+    return formatDistanceToNow(this.last_activity);
   }
 }
