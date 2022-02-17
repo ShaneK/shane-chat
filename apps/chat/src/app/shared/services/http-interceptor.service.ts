@@ -10,6 +10,15 @@ import { UserService } from './user.service';
 export class HttpInterceptorService {
   constructor() {}
 
+  /**
+   * This method intercepts all http requests and adds the user id to the request headers, which
+   * is used by the API to identify the user when they create rooms or post messages in them.
+   *
+   * It can also prepend `/api/` to the request url if it's not already there, which is just for convenience.
+   *
+   * @param req
+   * @param next
+   */
   public intercept(
     req: HttpRequest<never>,
     next: HttpHandler

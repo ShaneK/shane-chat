@@ -34,6 +34,13 @@ export class UserService {
       .pipe(map((user) => (user ? new User(user) : null)));
   }
 
+  /**
+   * Sign the user in if we have their user object, if rememberMe is true we save
+   * the id in localstorage so we stay logged in between refreshes.
+   *
+   * @param user
+   * @param rememberMe
+   */
   public signIn(user: User, rememberMe: boolean): void {
     if (!user) {
       return;

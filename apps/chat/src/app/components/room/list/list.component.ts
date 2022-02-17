@@ -31,10 +31,6 @@ export class ListComponent implements OnInit {
   public ngOnInit(): void {
     this._state.connect('rooms', this._store.select(RoomState.rooms));
     this._store.dispatch(new RoomActions.ListRooms());
-
-    this._state.hold(this._state.select('rooms'), (rooms) => {
-      console.log(rooms);
-    });
   }
 
   public async openCreateDialog(): Promise<void> {

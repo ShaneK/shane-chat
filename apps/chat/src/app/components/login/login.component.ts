@@ -14,7 +14,7 @@ import { UserService } from '../../shared/services/user.service';
 export class LoginComponent implements OnInit {
   public form = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-    rememberMe: new FormControl(false),
+    rememberMe: new FormControl(true),
   });
   public errorMessage: string = '';
 
@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    // If we don't find a user based on the input name, we can assume it doesn't exist
     const user = await firstValueFrom(
       this._userService.getUserByName(this.form.value.name)
     );
@@ -41,6 +42,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    // Sign the user in and (potentially) save their details for the future
     this._userService.signIn(user, this.form.value.rememberMe);
     await this._router.navigate(['/']);
   }
