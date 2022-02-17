@@ -20,6 +20,11 @@ export namespace RoomActions {
     public static type = '[RoomState] Load room by ID';
     constructor(public id: string) {}
   }
+
+  export class CreateRoomComplete {
+    public static type = '[RoomState] Create room complete';
+    constructor(public error?: string) {}
+  }
 }
 
 export interface RoomStore {
@@ -66,7 +71,19 @@ export class RoomState {
       setState((state) => {
         return {
           ...(state || {}),
-          rooms: rooms.map((x) => new Room(x)),
+          rooms: rooms
+            .map((x) => new Room(x))
+            .sort((a, b) => {
+              if (a.last_activity < b.last_activity) {
+                return 1;
+              }
+
+              if (a.last_activity > b.last_activity) {
+                return -1;
+              }
+
+              return 0;
+            }),
         };
       });
     });
@@ -74,16 +91,32 @@ export class RoomState {
 
   @Action(RoomActions.CreateRoom)
   public createRoom(
-    { setState }: StateContext<RoomStore>,
+    { setState, dispatch }: StateContext<RoomStore>,
     { name }: RoomActions.CreateRoom
   ): void {
-    RoomState.roomService.createRoom(name).subscribe((room) => {
-      setState((state) => {
-        return {
-          ...(state || {}),
-          rooms: [new Room(room), ...state.rooms],
-        };
-      });
+    RoomState.roomService.createRoom(name).subscribe({
+      next: (room) => {
+        setState((state) => {
+          return {
+            ...(state || {}),
+            rooms: [new Room(room), ...state.rooms].sort((a, b) => {
+              if (a.last_activity < b.last_activity) {
+                return 1;
+              }
+
+              if (a.last_activity > b.last_activity) {
+                return -1;
+              }
+
+              return 0;
+            }),
+          };
+        });
+        dispatch(new RoomActions.CreateRoomComplete());
+      },
+      error: (err) => {
+        dispatch(new RoomActions.CreateRoomComplete(err.error));
+      },
     });
   }
 

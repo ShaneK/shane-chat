@@ -2,12 +2,13 @@
 <div mat-dialog-content>
   <mat-form-field class="fill-space">
     <mat-label>Room Name</mat-label>
-    <input matInput [(ngModel)]="data.roomName" (keydown.enter)="dialogRef.close(data.roomName)" />
+    <input matInput [(ngModel)]="data.roomName" (keydown.enter)="save()" />
   </mat-form-field>
+  <mat-error *ngIf="error">{{error}}</mat-error>
 </div>
 <div mat-dialog-actions align="end">
   <button mat-button (click)="dialogRef.close()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data.roomName" cdkFocusInitial>
+  <button mat-button (click)="save()" cdkFocusInitial>
     Create
   </button>
 </div>

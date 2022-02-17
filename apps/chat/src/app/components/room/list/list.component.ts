@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngxs/store';
 import { RxState } from '@rx-angular/state';
 import { Room } from '@shane-chat/models';
-import { firstValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { RoomActions } from '../../../shared/states';
 import { RoomState } from '../../../shared/states/room/room.state';
 import { CreateRoomModalComponent } from '../modals/create-room-modal/create-room-modal.component';
@@ -17,6 +17,7 @@ interface ComponentState {
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
   public state$: Observable<ComponentState> = this._state.select();
@@ -41,12 +42,5 @@ export class ListComponent implements OnInit {
       width: '350px',
       data: { roomName: '' },
     });
-
-    const result = await firstValueFrom(dialogRef.afterClosed());
-    if (!result.trim()) {
-      return;
-    }
-
-    this._store.dispatch(new RoomActions.CreateRoom(result.trim()));
   }
 }
