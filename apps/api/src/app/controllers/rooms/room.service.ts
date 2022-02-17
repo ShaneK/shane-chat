@@ -11,7 +11,7 @@ export class RoomService {
       Room & { last_message?: Date }
     >(
       `
-SELECT r.*, u.name as creator_name FROM public.rooms r
+SELECT r.*, u.name as creator_name, messages.last_message FROM public.rooms r
 LEFT JOIN public.users u ON u.id = r.created_by
 LEFT JOIN LATERAL (
     SELECT created_on as last_message FROM public.messages m WHERE m.room_id = r.id ORDER BY created_on DESC LIMIT 1
