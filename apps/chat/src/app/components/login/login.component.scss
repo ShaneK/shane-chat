@@ -1,0 +1,39 @@
+.login-card {
+  position: absolute;
+  margin-top: 5vh;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: 30vw;
+  max-width: 600px;
+  min-width: 360px;
+
+  .stock-photo {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  ::ng-deep div.mat-tab-body-content {
+    overflow: hidden;
+  }
+
+  ::ng-deep .mat-card-header-text,
+  .title {
+    width: 100%;
+    text-align: center;
+  }
+
+  .login-form {
+    padding-top: 20px;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+}

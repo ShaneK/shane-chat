@@ -1,0 +1,43 @@
+<div class="room-list">
+  <ng-container *ngIf="state$ | async as state">
+    <ng-container *ngIf="(state?.rooms?.length ?? 0) === 0">
+      <mat-card class="room-list__no-rooms-card">
+        <mat-card-title>No Rooms</mat-card-title>
+        <mat-card-subtitle>...yet...</mat-card-subtitle>
+        <mat-card-content>
+          <p>
+            There are currently no rooms to list.<br />
+            Take the plunge, make a new one now!
+          </p>
+        </mat-card-content>
+        <mat-card-actions align="end" (click)="openCreateDialog()">
+          <button mat-button>Create a Room</button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+    <ng-container *ngIf="(state?.rooms?.length ?? 0) > 0">
+      <mat-card class="room-list__rooms-card" *ngFor="let room of state.rooms">
+        <mat-card-title>{{room.name}}</mat-card-title>
+        <mat-card-subtitle>last active 2 minutes ago</mat-card-subtitle>
+        <mat-card-content>
+          Created by TEST TEXT
+        </mat-card-content>
+        <mat-card-actions align="end" [routerLink]="['/room', 'view', room.id]">
+          <button mat-button>Join Room</button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-card class="room-list__rooms-card">
+        <mat-card-title>Don't see anything you like?</mat-card-title>
+        <mat-card-content>
+          <p>
+            Be the change you want to see in the world.<br />
+            Make a new room now!
+          </p>
+        </mat-card-content>
+        <mat-card-actions align="end" (click)="openCreateDialog()">
+          <button mat-button>Create a Room</button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </ng-container>
+</div>

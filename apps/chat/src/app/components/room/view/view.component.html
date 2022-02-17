@@ -1,0 +1,46 @@
+<div class="room-view" *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.room">
+    <div class="room-view__title-bar">
+      <a [routerLink]="['/room', 'list']">Room List</a>
+      {{ state.room ? '> ' + state.room.name : '' }}
+    </div>
+    <div #chat class="room-view__chat">
+      <div
+        class="room-view__chat__message-container"
+        *ngFor="let message of state.room.messages"
+      >
+        <span class="room-view__chat__message-container__author">{{
+          message.author_name
+        }}</span>
+        <span class="room-view__chat__message-container__message">
+          {{ message.message }}
+        </span>
+      </div>
+      <div
+        *ngIf="!state?.room?.messages?.length"
+        class="room-view__chat__message-container__no-message"
+      >
+        No messages yet! You can be the first!
+      </div>
+    </div>
+    <div class="room-view__chat-entry">
+      <input
+        type="text"
+        class="room-view__chat-entry__input"
+        placeholder="Type a message..."
+        [maxlength]="messageMaxLength"
+        [(ngModel)]="message"
+        (keyup.enter)="sendMessage()"
+      />
+      <button
+        mat-raised-button
+        class="room-view__chat-entry__button"
+        color="primary"
+        [disabled]="message.length === 0 || message.length > messageMaxLength"
+        (click)="sendMessage()"
+      >
+        Send
+      </button>
+    </div></ng-container
+  >
+</div>

@@ -1,0 +1,29 @@
+.header {
+  position: relative;
+
+  &__link {
+    color: var(--color-foreground);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &--align-end {
+    color: var(--color-foreground);
+    position: absolute;
+    right: 0;
+    font-size: 14px;
+  }
+
+  &__menu-button {
+    font-size: 16px;
+  }
+
+  &__menu-item-button {
+    i {
+      margin-right: 5px;
+    }
+  }
+}

@@ -1,0 +1,75 @@
+.room-view {
+  $nav-bar-height: 64px;
+  $text-entry-height: 37px;
+  $send-button-width: 74px;
+  $title-bar-height: 30px;
+  height: calc(100vh - #{$nav-bar-height} - #{$title-bar-height});
+  width: 100vw;
+
+  &__title-bar {
+    height: $title-bar-height;
+    line-height: $title-bar-height;
+    padding: 0 5px;
+
+    a {
+      color: var(--color-text-primary);
+      text-decoration: underline;
+    }
+  }
+
+  &__chat {
+    height: calc(100% - #{$text-entry-height});
+    width: 100%;
+    background-color: var(--chat-background-color);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: auto;
+
+    & > div:first-child {
+      // Drop content to the bottom of the div by setting the margin on the first element.
+      // It would be really cool if I could use `justify-content: flex-end;` for this,
+      // but apparently it's a long-standing bug in Chrome and Firefox where that breaks
+      // scrolling: https://stackoverflow.com/a/37515194/503917
+      margin-top: auto;
+    }
+
+    &-entry {
+      width: 100%;
+      height: $text-entry-height;
+
+      &__input {
+        height: $text-entry-height;
+        width: calc(100% - #{$send-button-width});
+        padding: 0 5px;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+      }
+
+      &__button {
+        border-radius: 0;
+      }
+    }
+
+    &__message-container {
+      word-wrap: break-word;
+      background-color: var(--color-background);
+      border-radius: 20px;
+      padding: 15px;
+      margin-bottom: 5px;
+
+      &__no-message {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      &__author {
+        font-weight: bold;
+        display: block;
+        text-decoration: underline;
+      }
+    }
+  }
+}

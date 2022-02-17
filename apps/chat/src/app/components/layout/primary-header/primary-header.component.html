@@ -1,0 +1,20 @@
+<mat-toolbar class="header">
+  <a [routerLink]="['/']" class="header__link">Shane Chat</a>
+  <span class="header--align-end">
+    {{ user?.name || '' }}
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      aria-label="Toggle menu"
+      class="header__menu-button"
+    >
+      <i class="fa-solid fa-ellipsis-vertical"></i>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item class="header__menu-item-button" (click)="logout()">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Sign Out</span>
+      </button>
+    </mat-menu>
+  </span>
+</mat-toolbar>

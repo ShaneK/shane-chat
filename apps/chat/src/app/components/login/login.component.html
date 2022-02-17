@@ -1,0 +1,66 @@
+<mat-card class="login-card" [formGroup]="form">
+  <img
+    src="/assets/images/chat.jpeg"
+    alt="Chat Stock Image"
+    class="stock-photo"
+  />
+  <mat-card-header>
+    <mat-card-title class="title"> Welcome to Shane Chat! </mat-card-title>
+  </mat-card-header>
+  <mat-tab-group>
+    <mat-tab label="Sign In">
+      <mat-card-content>
+        <div class="login-form">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="John Smith"
+              maxLength="50"
+              formControlName="name"
+              (keydown.enter)="login()"
+            />
+          </mat-form-field>
+          <div class="error-message" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+          <section>
+            <mat-checkbox formControlName="rememberMe">
+              Remember me
+            </mat-checkbox>
+          </section>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button (click)="login()">LOGIN</button>
+      </mat-card-actions>
+    </mat-tab>
+    <mat-tab label="Register">
+      <mat-card-content>
+        <div class="login-form">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="John Smith"
+              maxLength="50"
+              formControlName="name"
+              (keydown.enter)="register()"
+            />
+          </mat-form-field>
+          <div class="error-message" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+          <section>
+            <mat-checkbox formControlName="rememberMe">
+              Remember me
+            </mat-checkbox>
+          </section>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button (click)="register()">REGISTER</button>
+      </mat-card-actions>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>
