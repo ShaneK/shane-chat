@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Param, Post, Res, Sse } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { User } from '@shane-chat/models';
-import { interval, map, Observable } from 'rxjs';
 import { UserService } from './user.service';
 
 @Controller()
@@ -34,12 +33,5 @@ export class UserController {
     }
 
     return response.status(201).send(user);
-  }
-
-  @Sse('sse')
-  public sse(): Observable<MessageEvent> {
-    return interval(1000).pipe(
-      map(() => new MessageEvent('message', { data: { hello: 'world' } }))
-    );
   }
 }

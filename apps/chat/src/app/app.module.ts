@@ -21,7 +21,7 @@ import { PrimaryNavComponent } from './components/layout/primary-nav/primary-nav
 import { LoginComponent } from './components/login/login.component';
 import { RouteNotFoundComponent } from './components/route-not-found/route-not-found.component';
 import { RoutingModule } from './routing.module';
-import { HttpInterceptorService } from './shared/services/http-interceptor.service';
+import { HttpInterceptorService } from './shared';
 import { states } from './shared/states';
 
 @NgModule({

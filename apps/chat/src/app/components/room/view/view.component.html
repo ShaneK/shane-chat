@@ -9,9 +9,15 @@
         class="room-view__chat__message-container"
         *ngFor="let message of state.room.messages"
       >
-        <span class="room-view__chat__message-container__author">{{
-          message.author_name
-        }}</span>
+        <span
+          class="room-view__chat__message-container__author"
+          [ngClass]="{
+            'room-view__chat__message-container__author--self':
+              message.user_id === state.user?.id
+          }"
+        >
+          {{ message.author_name }}
+        </span>
         <span class="room-view__chat__message-container__message">
           {{ message.message }}
         </span>

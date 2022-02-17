@@ -3,7 +3,7 @@ import { Action, createSelector, Selector, State, StateContext } from '@ngxs/sto
 import { isNotNullOrUndefined } from '@shane-chat/helpers';
 import { Room } from '@shane-chat/models';
 import { filter } from 'rxjs';
-import { RoomService } from '../../services/room.service';
+import { RoomService } from '../../services';
 
 export namespace RoomActions {
   export class ListRooms {

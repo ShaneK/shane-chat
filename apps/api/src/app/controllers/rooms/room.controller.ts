@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res, Sse } from '@nestjs/common';
 import { Room } from '@shane-chat/models';
+import { interval, map, Observable } from 'rxjs';
+import { MessageService } from '../messages/message.service';
 import { RoomService } from './room.service';
 
 @Controller()
 export class RoomController {
-  constructor(private _roomService: RoomService) {}
+  constructor(private _roomService: RoomService, private _messageService: MessageService) {}
 
   @Get('room')
   public async getRoomList(): Promise<Room[]> {
@@ -13,7 +15,13 @@ export class RoomController {
 
   @Get('room/:id')
   public async getRoomById(@Param('id') id: string): Promise<Room | undefined> {
-    return await this._roomService.loadRoomById(id);
+    const room = await this._roomService.loadRoomById(id);
+    if (!room) {
+      return room;
+    }
+
+    room.messages = await this._messageService.loadMessagesByRoomId(room.id);
+    return room;
   }
 
   @Post('room')
@@ -39,5 +47,12 @@ export class RoomController {
     }
 
     return response.status(201).send(room);
+  }
+
+  @Sse('sse')
+  public sse(): Observable<MessageEvent> {
+    return interval(1000).pipe(
+      map(() => new MessageEvent('message', { data: { hello: 'world' } }))
+    );
   }
 }

@@ -2,13 +2,15 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { RxState } from '@rx-angular/state';
-import { Room } from '@shane-chat/models';
-import { map, Observable } from 'rxjs';
+import { Room, User } from '@shane-chat/models';
+import { firstValueFrom, Observable } from 'rxjs';
+import { MessageService, UserService } from '../../../shared';
 import { RoomActions } from '../../../shared/states';
 import { RoomState } from '../../../shared/states/room/room.state';
 
 interface ComponentState {
   room?: Room;
+  user: User;
 }
 
 @Component({
@@ -27,16 +29,15 @@ export class ViewComponent implements OnInit, AfterViewInit {
   constructor(
     private _route: ActivatedRoute,
     private _state: RxState<ComponentState>,
-    private _store: Store
+    private _store: Store,
+    private _messageService: MessageService
   ) {}
 
   public ngOnInit(): void {
+    this._state.set({ user: UserService.user });
     this._state.hold(this._route.params, ({ id }) => {
       this._store.dispatch(new RoomActions.LoadRoomById(id));
-      this._state.connect(
-        'room',
-        this._store.select(RoomState.roomById(id))
-      );
+      this._state.connect('room', this._store.select(RoomState.roomById(id)));
     });
   }
 
@@ -44,12 +45,19 @@ export class ViewComponent implements OnInit, AfterViewInit {
     this._scrollToBottom();
   }
 
-  public sendMessage(): void {
-    if (!this.message.length || this.message.length > this.messageMaxLength) {
+  public async sendMessage(): Promise<void> {
+    const { room } = this._state.get() || {};
+    if (
+      !room ||
+      !this.message.length ||
+      this.message.length > this.messageMaxLength
+    ) {
       return;
     }
 
-    console.log('Message:', this.message);
+    await firstValueFrom(
+      this._messageService.createMessage(this.message, room.id)
+    );
     this.message = '';
   }
 

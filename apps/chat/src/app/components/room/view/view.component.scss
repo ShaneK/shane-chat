@@ -69,6 +69,10 @@
         font-weight: bold;
         display: block;
         text-decoration: underline;
+
+        &--self {
+          color: var(--color-accent);
+        }
       }
     }
   }
