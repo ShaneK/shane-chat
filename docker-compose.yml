@@ -5,7 +5,8 @@ services:
     build: ./
     command: npm run start api -- --host=0.0.0.0
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       PORT: 3333
       POSTGRES_USER: postgres
@@ -26,6 +27,11 @@ services:
       POSTGRES_PASSWORD: postgrespasswd
       POSTGRES_DB: shane_chat
       PGDATA: /var/lib/postgres/data/pgdata
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - "15432:5432"
     volumes:
