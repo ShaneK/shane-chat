@@ -72,7 +72,7 @@ export class RoomController {
       );
 
       return () => {
-        this._dataService.subscriber.unlisten('my-channel');
+        this._dataService.subscriber.unlisten('room-message-added');
       };
     });
   }
