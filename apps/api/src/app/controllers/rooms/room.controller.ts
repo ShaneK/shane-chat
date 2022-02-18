@@ -1,12 +1,17 @@
 import { Body, Controller, Get, Param, Post, Req, Res, Sse } from '@nestjs/common';
-import { Room } from '@shane-chat/models';
-import { interval, map, Observable } from 'rxjs';
+import { Message, Room } from '@shane-chat/models';
+import { Observable } from 'rxjs';
+import { DataService } from '../../shared/services';
 import { MessageService } from '../messages/message.service';
 import { RoomService } from './room.service';
 
 @Controller()
 export class RoomController {
-  constructor(private _roomService: RoomService, private _messageService: MessageService) {}
+  constructor(
+    private _roomService: RoomService,
+    private _messageService: MessageService,
+    private _dataService: DataService
+  ) {}
 
   @Get('room')
   public async getRoomList(): Promise<Room[]> {
@@ -49,10 +54,26 @@ export class RoomController {
     return response.status(201).send(room);
   }
 
-  @Sse('sse')
-  public sse(): Observable<MessageEvent> {
-    return interval(1000).pipe(
-      map(() => new MessageEvent('message', { data: { hello: 'world' } }))
-    );
+  @Sse('room/stream/sse/:id')
+  public async sse(
+    @Param('id') roomId: string
+  ): Promise<Observable<MessageEvent>> {
+    await this._dataService.subscriber.listenTo('room-message-added');
+
+    return new Observable((observer) => {
+      this._dataService.subscriber.notifications.on(
+        'room-message-added',
+        (payload) => {
+          const message = payload as Message;
+          if (payload.room_id === roomId) {
+            observer.next(new MessageEvent('message', { data: payload }));
+          }
+        }
+      );
+
+      return () => {
+        this._dataService.subscriber.unlisten('my-channel');
+      };
+    });
   }
 }

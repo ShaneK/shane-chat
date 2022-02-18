@@ -2,9 +2,9 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { RxState } from '@rx-angular/state';
-import { Room, User } from '@shane-chat/models';
-import { firstValueFrom, Observable } from 'rxjs';
-import { MessageService, UserService } from '../../../shared';
+import { Message, Room, User } from '@shane-chat/models';
+import { firstValueFrom, Observable, tap } from 'rxjs';
+import { MessageService, SseService, UserService } from '../../../shared';
 import { RoomActions } from '../../../shared/states';
 import { RoomState } from '../../../shared/states/room/room.state';
 
@@ -30,14 +30,36 @@ export class ViewComponent implements OnInit, AfterViewInit {
     private _route: ActivatedRoute,
     private _state: RxState<ComponentState>,
     private _store: Store,
-    private _messageService: MessageService
+    private _messageService: MessageService,
+    private _sseService: SseService
   ) {}
 
   public ngOnInit(): void {
     this._state.set({ user: UserService.user });
     this._state.hold(this._route.params, ({ id }) => {
       this._store.dispatch(new RoomActions.LoadRoomById(id));
-      this._state.connect('room', this._store.select(RoomState.roomById(id)));
+      this._state.connect(
+        'room',
+        this._store
+          .select(RoomState.roomById(id))
+          .pipe(tap(() => this._scrollToBottom()))
+      );
+      this._state.hold(
+        this._sseService.getServerSentEvent(`/api/room/stream/sse/${id}`),
+        ({ data }) => {
+          const { room } = this._state.get();
+          try {
+            const message = new Message(JSON.parse(data));
+            this._state.set({
+              room: new Room({
+                ...(room || {}),
+                messages: [...(room?.messages || []), message],
+              }),
+            });
+            this._scrollToBottom();
+          } catch {}
+        }
+      );
     });
   }
 
@@ -62,8 +84,11 @@ export class ViewComponent implements OnInit, AfterViewInit {
   }
 
   private _scrollToBottom(): void {
-    if (this.chat?.nativeElement) {
-      this.chat.nativeElement.scrollTop = this.chat?.nativeElement.scrollHeight;
-    }
+    setTimeout(() => {
+      if (this.chat?.nativeElement) {
+        this.chat.nativeElement.scrollTop =
+          this.chat?.nativeElement.scrollHeight;
+      }
+    });
   }
 }

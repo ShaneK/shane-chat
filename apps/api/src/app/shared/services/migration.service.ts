@@ -50,7 +50,7 @@ CREATE TABLE rooms (
 
 CREATE TABLE messages (
   id uuid PRIMARY KEY,
-  message VARCHAR ( 2000 ) UNIQUE NOT NULL,
+  message VARCHAR ( 2000 ) NOT NULL,
   created_on TIMESTAMP NOT NULL,
   edited_on TIMESTAMP NOT NULL,
   user_id uuid NOT NULL,

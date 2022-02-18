@@ -23,6 +23,7 @@ The app will pull everything it needs, then it will `npm install` and start runn
     - ngxs
     - rx-angular
     - Font Awesome
+    - Angular Material
 - Node
     - NestJS
     - pg
