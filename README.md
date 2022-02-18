@@ -27,4 +27,6 @@ The app will pull everything it needs, then it will `npm install` and start runn
 - Node
     - NestJS
     - pg
+    - pg-listen
 - PostgreSQL
+    - Notify/Listen for real-time chat updates
