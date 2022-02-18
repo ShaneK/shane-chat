@@ -1,17 +1,28 @@
 import { Body, Controller, Get, Param, Post, Req, Res, Sse } from '@nestjs/common';
 import { Message, Room } from '@shane-chat/models';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { DataService } from '../../shared/services';
 import { MessageService } from '../messages/message.service';
 import { RoomService } from './room.service';
 
 @Controller()
 export class RoomController {
+  public static EventStream: Subject<Message> = new Subject<Message>();
+
   constructor(
     private _roomService: RoomService,
     private _messageService: MessageService,
     private _dataService: DataService
-  ) {}
+  ) {
+    this._dataService.subscriber.listenTo('room-message-added');
+    this._dataService.subscriber.notifications.on(
+      'room-message-added',
+      (payload) => {
+        const message = payload as Message;
+        RoomController.EventStream.next(payload);
+      }
+    );
+  }
 
   @Get('room')
   public async getRoomList(): Promise<Room[]> {
@@ -58,22 +69,14 @@ export class RoomController {
   public async sse(
     @Param('id') roomId: string
   ): Promise<Observable<MessageEvent>> {
-    await this._dataService.subscriber.listenTo('room-message-added');
-
     return new Observable((observer) => {
-      this._dataService.subscriber.notifications.on(
-        'room-message-added',
-        (payload) => {
-          const message = payload as Message;
-          if (payload.room_id === roomId) {
-            observer.next(new MessageEvent('message', { data: payload }));
-          }
+      RoomController.EventStream.subscribe((data) => {
+        if (data.room_id === roomId) {
+          observer.next(new MessageEvent('message', { data: data }));
         }
-      );
+      });
 
-      return () => {
-        this._dataService.subscriber.unlisten('room-message-added');
-      };
+      return () => {};
     });
   }
 }
