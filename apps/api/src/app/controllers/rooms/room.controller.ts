@@ -19,7 +19,7 @@ export class RoomController {
       'room-message-added',
       (payload) => {
         const message = payload as Message;
-        RoomController.EventStream.next(payload);
+        RoomController.EventStream.next(message);
       }
     );
   }
