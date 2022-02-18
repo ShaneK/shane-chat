@@ -14,7 +14,7 @@ Clone this repo to a local directory with:
 `git clone git@github.com:ShaneK/shane-chat.git`  
 Then run `docker-compose up` to get started.
 
-The app will pull everything it needs, then it will `npm install` and start running on [http://localhost:4200](http://localhost:4200).
+The app will pull everything it needs, then it will `npm install` and start running on [http://localhost:4200](http://localhost:4200). The whole `docker-compose up` process takes 6-10 minutes the first time.
 
 
 ## Tech stack
